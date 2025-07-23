@@ -1,25 +1,27 @@
-int LED = 11;
-int button = 7;
-int pot = A5;
-int potval = 0;
-int butVal = 0;
-int brightness = 0;
-
+int IR = 9;
+int LED = 10;
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(IR, INPUT);
   pinMode(LED, OUTPUT);
-  pinMode(button, INPUT_PULLUP);
-  pinMode(pot, OUTPUT);
 }
 
-void loop() {
-  potval = analogRead(pot);
-  butVal = digitalRead(button);
-  brightness = potval/4;
+void loop() 
+{
+  int sensorStatus = digitalRead(IR); //read the sensor
 
-  if (butVal == LOW) {
-    analogWrite(LED, 0);
-  } else {
-    analogWrite(LED, brightness);
+  //If light is Not reflected due to encontering a black color 
+  // or no objects are close, the sensor outputs a HIGH (5V) signal
+
+  if (sensorStatus == 1) {
+    digitalWrite(LED, LOW);
+    Serial.println("Black Detected");
+  }
+  //IF light is reflected from a non-black color,
+  //the senor outputs a LOW (0V) Signal 
+  else
+  {
+    digitalWrite(LED, HIGH);
+    Serial.println("Black Not Detected");
   }
 }
